@@ -43,10 +43,12 @@ def response(user_response):
         answer_response = answer_response + sent_token[idx]
         return answer_response
 
-user_response = input()
+user_response = input("Enter question here >>>")
 user_response = user_response.lower()
 sent_token.append(user_response)
 word_token = word_token + nltk.word_tokenize(user_response)
 final_words = list(set(word_token))
 print(response(user_response))
+print()
+
 sent_token.remove(user_response)
