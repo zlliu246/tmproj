@@ -1,6 +1,7 @@
 import nltk
 import string
 import spacy
+import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import warnings
@@ -10,12 +11,19 @@ warnings.filterwarnings("ignore")
 # nltk.download('punkt')
 # nltk.download('wordnet')
 
-answers = open('dog.txt', 'r', errors='ignore')
-answers = answers.read()
-answers = answers.lower().encode('ASCII','ignore').decode('ASCII')
+#change to the dataset
+dataset = pd.read_csv('../data/SQuAD_csv.csv').loc[:, ['question','text']]
+dataset['question'] = dataset['question'].apply(lambda x: str(x).lower().encode('ASCII','ignore').decode('ASCII'))
+dataset['text'] = dataset['text'].apply(lambda x: str(x).encode('ASCII','ignore').decode('ASCII'))
+qa_pairs = dataset.set_index('question').to_dict()['text']
 
-sent_token = nltk.sent_tokenize(answers)
-word_token = nltk.word_tokenize(answers)
+#extract out columns individually (context, questions, answers)
+# context = ' \n'.join(dataset['context'].apply(lambda x: str(x).lower().encode('ASCII','ignore').decode('ASCII')).unique())
+# answers = ' \n'.join(dataset['text'].unique())
+questions = ' \n'.join(dataset['question'].unique())
+
+sent_token = nltk.sent_tokenize(questions)
+word_token = nltk.word_tokenize(questions)
 lemmer = nltk.stem.WordNetLemmatizer()
 
 def lemmer_tokens(tokens):
@@ -42,13 +50,18 @@ def response(user_response):
     else:
         answer_response = answer_response + sent_token[idx]
         return answer_response
-
+    
 user_response = input("Enter question here >>>")
 user_response = user_response.lower()
+
 sent_token.append(user_response)
+
 word_token = word_token + nltk.word_tokenize(user_response)
 final_words = list(set(word_token))
-print(response(user_response))
+
+# print(response(user_response))
+print(qa_pairs[response(user_response)])
+
 print()
 
 sent_token.remove(user_response)
