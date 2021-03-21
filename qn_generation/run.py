@@ -1,30 +1,33 @@
-import json
+import pickle
+from time import time
+from sklearn.metrics.pairwise import cosine_similarity
+import pandas as pd
+import numpy as np
 
-def parse_generated_qns():
-    """
-    generated questions are split into a.txt and b.txt because >50mb & cannot push to git lol
+vectorizer, question_vectors, existing_questions, existing_answers = pickle.load(open("model.sav", "rb"))
 
-    returns list of tuples containing
-        json containing qa, context
+def get_closest_qa_pair(target_qn, vectorizer, question_vectors, questions, answers):
+    target_vector = vectorizer.transform([target_qn])
+    cossim = cosine_similarity(question_vectors, target_vector)
 
-    """
+    i = np.argmax(cossim)
 
-    def read_file(filename):
-        with open(filename, encoding="iso-8859-1") as f:
-            return f.read().split("\n")
+    qn, an = questions[i], answers[i]
 
-    raw = read_file("generated_qns/a.txt") + read_file("generated_qns/b.txt")
+    if type(an) == list:
+        an = [i for i in an if i["correct"]][0]["answer"]
 
-    out = []
-    for line in raw:
-        try:
-            qa, context = line.split("\t")
-            out.append((json.loads(qa), context))
-        except:pass
+    return qn, an
 
-    return out
+questions = [
+    "who is beyonce?",
+    "when did beyonce become famous?",
+    "how many children does beyonce have?",
+    "how to become a cow",
+    "how to crack an egg?",
+    "how to be happy"
+]
 
-
-if __name__ == "__main__":
-    qas = parse_generated_qns()
-    print(len(qas))
+for question in questions:
+    closest_qn, answer = get_closest_qa_pair(question, vectorizer, question_vectors, existing_questions, existing_answers)
+    print(question, "|", closest_qn, "|", answer)
