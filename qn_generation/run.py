@@ -19,15 +19,13 @@ def get_closest_qa_pair(target_qn, vectorizer, question_vectors, questions, answ
 
     return qn, an
 
-questions = [
-    "who is beyonce?",
-    "when did beyonce become famous?",
-    "how many children does beyonce have?",
-    "how to become a cow",
-    "how to crack an egg?",
-    "how to be happy"
-]
 
-for question in questions:
+
+while True:
+
+    question = input("input question here >>>")
+
     closest_qn, answer = get_closest_qa_pair(question, vectorizer, question_vectors, existing_questions, existing_answers)
-    print(question, "|", closest_qn, "|", answer)
+
+    print(f"input question: {question}\nclosest question: {closest_qn}\nanswer: {answer}\n")
+
