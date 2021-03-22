@@ -4,7 +4,6 @@ from sklearn.metrics.pairwise import cosine_similarity
 import pandas as pd
 import numpy as np
 
-vectorizer, question_vectors, existing_questions, existing_answers = pickle.load(open("model.sav", "rb"))
 
 def get_closest_qa_pair(target_qn, vectorizer, question_vectors, questions, answers):
     target_vector = vectorizer.transform([target_qn])
@@ -20,12 +19,15 @@ def get_closest_qa_pair(target_qn, vectorizer, question_vectors, questions, answ
     return qn, an
 
 
+if __name__ == "__main__":
 
-while True:
+    vectorizer, question_vectors, existing_questions, existing_answers = pickle.load(open("model.sav", "rb"))
 
-    question = input("input question here >>>")
+    while True:
 
-    closest_qn, answer = get_closest_qa_pair(question, vectorizer, question_vectors, existing_questions, existing_answers)
+        question = input("input question here >>>")
 
-    print(f"input question: {question}\nclosest question: {closest_qn}\nanswer: {answer}\n")
+        closest_qn, answer = get_closest_qa_pair(question, vectorizer, question_vectors, existing_questions, existing_answers)
+
+        print(f"input question: {question}\nclosest question: {closest_qn}\nanswer: {answer}\n")
 
