@@ -1,0 +1,16 @@
+{'NER TFIDF': 1904, 'Para TFIDF': 3932, 'Summary TFIDF': 3430, 'NER+Para TFIDF': 3011, 'NER+Summary TFIDF': 2735, 'Para LSI': 3812, 'Summary LSI': 3358, 'Para Doc2Vec': 469, 'Summary Doc2Vec': 294, 'Para InferSent': 539, 'Summary InferSent': 654, 'Ensemble': 4224}
+
+Total number of samples: 4857
+------------------------------------
+Accuracy of Ensemble: 0.87
+Accuracy of Para TFIDF: 0.81
+Accuracy of Para LSI: 0.78
+Accuracy of Summary TFIDF: 0.71
+Accuracy of Summary LSI: 0.69
+Accuracy of NER+Para TFIDF: 0.62
+Accuracy of NER+Summary TFIDF: 0.56
+Accuracy of NER TFIDF: 0.39
+Accuracy of Summary InferSent: 0.13
+Accuracy of Para InferSent: 0.11
+Accuracy of Para Doc2Vec: 0.1
+Accuracy of Summary Doc2Vec: 0.06
