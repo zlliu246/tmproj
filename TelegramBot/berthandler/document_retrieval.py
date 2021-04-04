@@ -1,14 +1,3 @@
-from time import time
-times = []
-def cp(text="",times=times):
-    return
-    now = time()
-    if len(times) == 0:
-        times.append(now)
-    else:
-        print(text, now-times[-1])
-cp()
-
 import nltk
 from nltk.stem import WordNetLemmatizer
 from nltk.stem import PorterStemmer
@@ -36,8 +25,6 @@ from collections import defaultdict, Counter
 import random
 
 stop_words = stopwords.words("english")
-
-cp("importing shit")
 
 def clean_normalcase_stop_lem(text):
     text = re.sub('[%s]' % re.escape(string.punctuation), ' ', text)
@@ -319,13 +306,13 @@ def get_similar_docs(df, tfidfvectorizer, docs_tfidf_matrix, query):
             
     return [i[0] for i in top_doc_ids]
 
-cp()
-df = pickle.load(open("data/legal_doc_retrieval_cleaned_3_apr.pkl", "rb")); cp("loading df")
+
+df = pickle.load(open("data/legal_doc_retrieval_cleaned_3_apr.pkl", "rb"))
 
 # TF-IDF Vectorizer for cleaned_lowercase_nostop_lem column
-para_vectorizer = TfidfVectorizer(ngram_range=(1,2)); cp("loading para vectorizer")
-para_tfidf_matrix = para_vectorizer.fit_transform(df['cleaned_lowercase_nostop_lem']); cp("fit trasnform thingy")
-para_lsi_model = pickle.load(open("data/para_lsi_model.sav", "rb")); cp("loading pickled para_lsi_model")
+para_vectorizer = TfidfVectorizer(ngram_range=(1,2))
+para_tfidf_matrix = para_vectorizer.fit_transform(df['cleaned_lowercase_nostop_lem'])
+para_lsi_model = pickle.load(open("data/para_lsi_model.sav", "rb"))
 
 # IMPORTANT - this is gitignored cus too large to commit to git (500mb)
 # para_lsi_model = build_lsi("para")

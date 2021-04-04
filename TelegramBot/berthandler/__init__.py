@@ -1,6 +1,17 @@
-from TelegramBot.berthandler.document_retrieval import *
+from time import time
+times = []
+def cp(text="",times=times):
+    now = time()
+    if len(times) == 0:
+        print("start")
+        times.append(now)
+    else:
+        print(text, "-->", round(now-times[-1],3), "seconds")
+        times.append(now)
+cp()
 
-from TelegramBot.berthandler.bert import *
+from TelegramBot.berthandler.document_retrieval import *; cp("importing berthandler.document_retrieval")
+from TelegramBot.berthandler.bert import *; cp("berthandler.bert")
 
 class BertHandler():
 

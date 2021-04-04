@@ -1,24 +1,9 @@
-from time import time
-berttimes = []
-def cp(text="",times=berttimes):
-    now = time()
-    times = berttimes
-    if len(times) == 0:
-        times.append(now)
-    else:
-        print(text, now-times[-1])
-cp()
-
 import torch
 import textwrap
 from transformers import BertForQuestionAnswering
 from transformers import BertTokenizer
 model = BertForQuestionAnswering.from_pretrained('bert-large-uncased-whole-word-masking-finetuned-squad')
 tokenizer = BertTokenizer.from_pretrained('bert-large-uncased-whole-word-masking-finetuned-squad')
-# model_config = BertConfig.from_pretrained('bert-large-uncased-whole-word-masking-finetuned-squad', output_hidden_states=True)
-# self.bert = BertModel.from_pretrained('bert-base-uncased', config=model_config)
-
-cp("importing stuff for bert")
 
 def answer_question(question, answer_text):
 
