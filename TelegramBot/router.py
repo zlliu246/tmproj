@@ -1,6 +1,7 @@
 from TelegramBot.document_retrieval import *
 from TelegramBot.berthandler import *
 from TelegramBot.POSTaggingHandler import *
+from TelegramBot.naivebayes import *
 
 class Router():
 
@@ -8,7 +9,8 @@ class Router():
         self.df = pickle.load(open("data/legal_doc_retrieval_cleaned_3_apr.pkl", "rb"))
         self.map = {
             "/pos": RuleBasedPOSTaggingHandler(),
-            "/bert": BertHandler()
+            "/bert": BertHandler(),
+            "/nb": NaiveBayesHandler()
         }
         # self.questionSuggestionHandler = QuestionSuggestionHandler(df)
 
