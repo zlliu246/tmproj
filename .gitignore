@@ -5,3 +5,5 @@ data.csv
 __pycache__
 .env
 data/para_lsi_model.sav
+stanford-corenlp-full-2016-10-31.zip
+stanford-corenlp-full-2016-10-31

@@ -10,16 +10,14 @@ def cp(text="",times=times):
         times.append(now)
 cp()
 
-from TelegramBot.berthandler.document_retrieval import *; cp("importing berthandler.document_retrieval")
 from TelegramBot.berthandler.bert import *; cp("berthandler.bert")
 
 class BertHandler():
 
     def __init__(self):
-        self.df = pickle.load(open("data/legal_doc_retrieval_cleaned_3_apr.pkl", "rb"))
+        pass
 
-    def handle(self, question):
-        bestcontext = ensemble_doc_retrieval(self.df, question)
-        return answer_question(question, bestcontext)
+    def handle(self, question, bestdocument):
+        return answer_question(question, bestdocument)
 
 

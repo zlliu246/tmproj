@@ -316,7 +316,7 @@ para_lsi_model = pickle.load(open("data/para_lsi_model.sav", "rb"))
 
 # IMPORTANT - this is gitignored cus too large to commit to git (500mb)
 # para_lsi_model = build_lsi("para")
-# pickle.dump(para_lsi_model, open("data/para_lsi_mode.sav", "wb"))
+# pickle.dump(para_lsi_model, open("data/para_lsi_model.sav", "wb"))
 
 def ensemble_doc_retrieval(df, query):
     ranking_dict = {}
@@ -342,7 +342,7 @@ def ensemble_doc_retrieval(df, query):
     
     for doc_id, score in sorted(ranking_dict.items(), key=lambda item: item[1], reverse=True):
         res = df[df['context_id'] == doc_id]['context'].values[0]
-        results.append(res)
+        results.append((doc_id,res))
 
-    return results[0]
+    return results
 
