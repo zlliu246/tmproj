@@ -1,7 +1,13 @@
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, Dispatcher
 from TelegramBot.router import *
 
-TOKEN='1754891196:AAGY6A1tFgRa2vkrzxQbK5rYT1jxkhr84ZM'
+"""
+IMPORTANT!!!!!: Do NOT push our telebot token to git plz
+also, create a .env in your root directory containing just the token
+"""
+
+with open(".env") as f:
+    TOKEN = f.read().strip()
 
 updater = Updater(TOKEN, use_context=True)
 dispatcher = updater.dispatcher
@@ -12,6 +18,6 @@ dispatcher.add_handler(MessageHandler(Filters.text, router.route))
 updater.start_polling()
 
 print()
-print("telegrambot is running!")
+print("halobot is running!")
 
 updater.idle()
