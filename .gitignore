@@ -4,3 +4,4 @@ data.csv
 *.pyc
 __pycache__
 .env
+data/para_lsi_model.sav
