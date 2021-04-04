@@ -1,32 +1,14 @@
+"""
+Run this file to test telegram bot functionality without
+having to run the telegram bot
+"""
 
-# import pandas as pd
+from TelegramBot.router import *
 
-# import pickle
-# from TelegramBot.document_retrieval import *
-# from TelegramBot.qn_suggestion import *
+router = Router()
 
-# df = pickle.load(open("data/legal_doc_retrieval_cleaned_3_apr.pkl", "rb"))
+while True:
+    userinput = input("Enter your query here >>> ")
+    print(router.process_user_input(userinput))
 
-# qs = QuestionSuggestionHandler()
-
-# qn = "I got cheated so what law should I read?"
-# bestcontexts = ensemble_doc_retrieval(df, qn)
-
-# suggestions = qs.suggest(qn, bestcontexts)
-
-# print(suggestions)
-
-# ========================================================================================================================
-
-import pickle
-from TelegramBot.document_retrieval import *
-from TelegramBot.naivebayes import *
-
-df = pickle.load(open("data/legal_doc_retrieval_cleaned_3_apr.pkl", "rb"))
-
-qn = "What is tort law?"
-context = ensemble_doc_retrieval(df, qn)[0][-1]
-
-x = answer_question(context, qn)
-
-print(x)
+    print("="*100)
