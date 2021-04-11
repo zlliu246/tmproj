@@ -1,7 +1,7 @@
 import json
 import pandas as pd
 
-data = pd.read_csv("out.txt", delimiter="\t", header=None).iloc[:,0].values
+data = pd.read_csv("generated.txt", delimiter="\t", header=None).iloc[:,0].values
 
 n = 0
 for qaj in data:

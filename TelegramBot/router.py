@@ -6,6 +6,9 @@ from TelegramBot.qn_suggestion import *
 
 """
 IMPORTANT: run the java stanford parser before running tele bot
+java -mx4g -cp "*" edu.stanford.nlp.pipeline.StanfordCoreNLPServer \
+    -preload tokenize,ssplit,pos,lemma,parse,depparse \
+    -status_port 9000 -port 9000 -timeout 15000
 """
 
 class Router():
@@ -25,9 +28,6 @@ class Router():
         reply = self.process_user_input(text)
         update.message.reply_text(reply)
 
-        # with open("LOG.txt", "a") as f:
-        #     f.write(f"{cmd}\t{text}\t{reply}\n")
-
     def process_user_input(self, text):
         try:
             cmd, *text = text.split(" ")
@@ -39,7 +39,6 @@ class Router():
 
             # do document retrieval first before feeding to models
             bestcontexts = ensemble_doc_retrieval(self.df, question)
-
             reply = self.map[cmd].handle(question, bestcontexts[0][-1])
 
             suggested_questions = self.questionSuggestionHandler.suggest(text, bestcontexts)
@@ -52,4 +51,4 @@ class Router():
             return reply
 
         except Exception as err:
-            return str(err)
+            return "Unable to retrieve answer"
