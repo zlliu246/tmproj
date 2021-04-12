@@ -52,3 +52,5 @@ class Router():
 
         except Exception as err:
             return "Unable to retrieve answer"
+
+# /pos which law covers the wrongs that humans inflict upon each other?
