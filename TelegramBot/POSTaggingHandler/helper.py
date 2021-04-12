@@ -57,15 +57,15 @@ def answer_question(query, context):
     query = re.sub(r'[^\w\s]', '', query)
     result = next(parser.raw_parse((query).lower()))
     query_split = query.split(" ")
+    sub_clause_labels = ['NP', 'N', 'VP', 'PP']
     new_query = ''
 
     if query_split[0].lower() in ['what', 'when', 'why', 'how', 'where', 'which', 'who']:
-        for subtree in result[0][1]:
-            if subtree.label() == 'NP' or subtree.label() == 'N'or subtree.label() == 'VP' or subtree.label() == 'WHNP':
+            if subtree.label() in sub_clause_labels:
                 new_query += ' '.join(subtree.leaves()) + " "
     else:
         for subtree in result:
-            if subtree.label() == 'NP' or subtree.label() == 'N'or subtree.label() == 'VP' or subtree.label() == 'WHNP':
+            if subtree.label() in sub_clause_labels:
                 new_query += ' '.join(subtree.leaves()) + " "
 
     if len(new_query) == 0:
@@ -96,50 +96,52 @@ def answer_question(query, context):
             clauses_dictionary[str(clause_counter)] = {}
             clauses_dictionary[str(clause_counter)][str(clause_counter) + "_" + "clause"] = ' '.join(result[0].leaves())
             np_dictionary[str(clause_counter) + "_NVP_" + "clause"] = ''
-
             inner_clause1 = 0
 
             for subtree in result[0]:
                 if subtree.label() in labels:
                     inner_clause1 += 1
                     clauses_dictionary[str(clause_counter)][str(clause_counter) + "_" + str(inner_clause1) + "_" + "clause"] = ' '.join(subtree.leaves())
+                    np_dictionary[str(clause_counter) + "_" + str(inner_clause1) + "_NVP_" + "clause"] = ''
 
                     inner_clause2 = 0
                     for subtree2 in subtree:
-                        continue
+                        if subtree2.label() in labels:
+                            inner_clause2 += 1
+                            clauses_dictionary[str(clause_counter)][str(clause_counter) + "_" + str(inner_clause1) + "_" + str(inner_clause2) + "_" + "clause"] = ' '.join(subtree2.leaves())
+                            np_dictionary[str(clause_counter) + "_" + str(inner_clause1) + "_" + str(inner_clause2) + "_NVP_" + "clause"] = ""
 
-                elif subtree.label() == 'NP' or subtree.label() == 'VP' or subtree.label() == 'PP' or subtree.label() == 'S':
+                            for subtree3 in subtree2:
+                                np_dictionary[str(clause_counter) + "_" + str(inner_clause1) + "_" + str(inner_clause2) + "_NVP_" + "clause"] += ' '.join(subtree3.leaves()) + " "
+
+                        elif subtree2.label() in sub_clause_labels:
+                            np_dictionary[str(clause_counter) + "_" + str(inner_clause1) + "_NVP_" + "clause"] += ' '.join(subtree2.leaves()) + " "
+
+                elif subtree.label() in sub_clause_labels:
                     np_dictionary[str(clause_counter) + "_NVP_" + "clause"] += ' '.join(subtree.leaves()) + " "
 
-    # print("Original question:", query)
     question_np = new_query
-    # print("Noun phrase after POS tagging of question:", question_np)
     question_vector = text_to_vector(question_np)
     cosine_np_dict = {}
-    cosine_np_dict_lemm = {}
-
-    question_np_lemm = text = ' '.join([wordnet_lemmatizer.lemmatize(word) for word in question_np.split() if word not in stop_words])
-    question_vector_lemm = text_to_vector(question_np_lemm)
 
     for np in np_dictionary:
         np_vector = text_to_vector(np_dictionary[np])
         cosine_np_dict[np] = get_cosine(question_vector, np_vector)
-
-        np_lemm = ' '.join([wordnet_lemmatizer.lemmatize(word) for word in np_dictionary[np].split() if word not in stop_words])
-        np_vector_lemm = text_to_vector(np_lemm)
-        cosine_np_dict_lemm[np] = get_cosine(question_vector_lemm, np_vector_lemm)
         
     max_clause_id, max_sim = max(cosine_np_dict.items(), key=operator.itemgetter(1))[0], max(cosine_np_dict.items(), key=operator.itemgetter(1))[1]
 
     clause_id = max_clause_id[:max_clause_id.find("NVP")-1]
 
-    answer = clauses_dictionary[clause_id][clause_id + "_clause"]
-    answer_split = answer.split(" ")
-    if answer_split[0] in ["and", 'but', 'or', 'nor', 'after', 'before', 'although']:
-        answer_split.pop(0)
-    answer_return = " ".join(answer_split)
+    if max_sim >= 0.2:
+        clause_id = max_clause_id[:max_clause_id.find("NVP")-1]
+        first_clause_id = clause_id[:clause_id.find("_")]
+
+        answer = clauses_dictionary[first_clause_id][clause_id + "_clause"]
+        answer_split = answer.split(" ")
+        if answer_split[0] in ["and", 'but', 'or', 'nor', 'after', 'before', 'although']:
+            answer_split.pop(0)
+        answer_return = " ".join(answer_split)
 
     return answer_return
 
-    # return "Unable to retrieve answer"
         
